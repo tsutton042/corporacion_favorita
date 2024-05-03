@@ -20,9 +20,7 @@ def __merge_dataframes(df_dict, kind):
     df = df.join(df_dict["items"], on="item_nbr", how="left")
     df = df.join(df_dict["stores"], on="store_nbr", how="left")
     df = df.join(df_dict["transactions"], on=["store_nbr", "date"], how="left")
-    df = df.join(
-        df_dict["oil"], on="date", how="left"
-    )  # this will need later processing
+    df = df.join(df_dict["oil"], on="date", how="left")
     # Process holiday data
     hols = df_dict["holidays_events"]
     # > Matching holiday types
