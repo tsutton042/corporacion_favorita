@@ -16,6 +16,7 @@ def __merge_dataframes(df_dict, kind):
     Helper function to create train/test dataframes
     """
     assert kind in ["test", "train"], "Invalid kind argument!"
+    kind = "train_small" if kind == "train" else kind  # ease-of-use
     df = df_dict[kind]
     df = df.join(df_dict["items"], on="item_nbr", how="left")
     df = df.join(df_dict["stores"], on="store_nbr", how="left")
@@ -76,19 +77,22 @@ def get_data(data_dir=f"{os.path.dirname(__file__)}/data") -> None:
     csvs = [fn for fn in os.listdir(data_dir) if fn[-4:] == ".csv"]
     data_frames = {}
     for file in csvs:
-        if file != "sample_submission.csv":
+        if file not in [
+            "sample_submission.csv",
+            "train.csv",
+        ]:  # use train_small instead of train
             table_name = file[:-4]
             print(f" *  Reading {file}")
-            # memory bottlenecked, probably due to train containing 125m rows
-            # could write a custom file reader function that's more memory efficient,
-            # but that seems like more work than it's worth
+            # OOM killer hits this while READING train (train is 4.88GB) - what can we do?
+            # SOLUTION: create a smaller file to use for training data (get_train_ds.sh does this)
+            # and read in this file. Could write an efficient custom file reader function, but
+            # seems like more effort than it's worth
             with tqdm() as bar:
                 data_frames[table_name] = pd.read_csv(
                     f"{data_dir}/{file}",
                     engine="python",  # c was crashing
-                    skiprows=lambda _: bar.update(1)
-                    and False,  # messy but useful progress bar
-                )
+                    skiprows=lambda x: bar.update(1) and False,
+                )  # messy but useful progress bar
     # get train & test dataframes
     print("Merging train data")
     train = __merge_dataframes(data_frames, "train")
