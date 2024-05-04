@@ -18,10 +18,10 @@ def __merge_dataframes(df_dict, kind):
     assert kind in ["test", "train"], "Invalid kind argument!"
     kind = "train_small" if kind == "train" else kind  # ease-of-use
     df = df_dict[kind]
-    df = df.join(df_dict["items"], on="item_nbr", how="left")
-    df = df.join(df_dict["stores"], on="store_nbr", how="left")
-    df = df.join(df_dict["transactions"], on=["store_nbr", "date"], how="left")
-    df = df.join(df_dict["oil"], on="date", how="left")
+    df = df.merge(df_dict["items"], on="item_nbr", how="left")
+    df = df.merge(df_dict["stores"], on="store_nbr", how="left")
+    df = df.merge(df_dict["transactions"], on=["store_nbr", "date"], how="left")
+    df = df.merge(df_dict["oil"], on="date", how="left")
     # Process holiday data
     hols = df_dict["holidays_events"]
     # > Matching holiday types
@@ -51,7 +51,7 @@ def __merge_dataframes(df_dict, kind):
             cond = (df.date == day.date) & (df.state == day.locale_name)
         elif day.locale == "Local":
             cond = (df.date == day.date) & (df.city == day.locale_name)
-        df_idxs = df[cond].idxs
+        df_idxs = df[cond].index
         # set day_off & work day based on day.type
         # I want to code golf this, it feels messy and hard to read, but so does one-liner approach
         if day.type == "Work Day":
