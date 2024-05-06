@@ -9,13 +9,17 @@ from typing import Union
 def persistance(data: pd.Series, horizon: int = 1) -> pd.Series:
     """
     Defines a basic persistance model with a defined horizon
-    Forms a baseline to compare other models to
+    Forms a baseline to compare other models to.
+    Note that the output will be
     """
     preds = pd.Series()
 
 
 def moving_average(
-    data: pd.Series, window: int = 2, weights: Union[list[float], None] = None
+    data: pd.Series,
+    window: int = 2,
+    weights: Union[list[float], None] = None,
+    match_lengths: bool = True,
 ) -> pd.Series:
     """
     Defines a moving (weighted) average with a given window.
@@ -26,10 +30,15 @@ def moving_average(
     assert all(x >= 0 for x in weights), "Not all weights are positive"
     # convert weights to a unit-sum window function - means no need to divide later
     unit_weights = pd.Series(x / sum(weights) for x in weights)
-    preds = pd.Series(data.iloc[0])
     # do this hack-job to make sure the inputs are as long as the outputs
-    for i in range(1, window):
-        preds.iat[i] = (data.iloc[:i] * unit_weights.iloc[:i]).sum()
+    if match_lengths:
+        preds = pd.Series(data.iloc[0])
+        for i in range(1, window):
+            preds.iat[i] = (
+                data.iloc[:i] * unit_weights.iloc[:i]
+            ).sum() / unit_weights.iloc[:i].sum()
+    else:
+        preds = pd.Series()
     # now actually run the usual moving average
     for i in range(window, data.shape[0]):
         windowed_data = data.iloc[(i - window) : i]
