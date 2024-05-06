@@ -3,8 +3,9 @@
 Contains various models that solve the (Corporation Favorita)[https://www.kaggle.com/c/favorita-grocery-sales-forecasting/overview] Kaggle competition
 
 # Modelling ideas
-* [ ] Persistance models (General, moving average/max/min)
-    * [ ] Pre-defined horizon/window
+* [x] Moving average
+* [x] Persistance models
+    * [x] Pre-defined horizon/window
     * [ ] Dynamic horizon/window
 * [ ] ARMA/ARIMA
 * [ ] ANNs
