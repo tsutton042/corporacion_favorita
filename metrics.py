@@ -1,10 +1,7 @@
-import numpy as np
-from numpy.typing import NDArray
+import pandas as pd
 
 
-def NWRMSLE(
-    pred: NDArray[np.float32], actual: NDArray[np.float32], weights: NDArray[np.float32]
-) -> float:
+def NWRMSLE(pred: pd.Series, actual: pd.Series, weights: pd.Series) -> float:
     # ensure input data are 1-d arrays
     assert len(pred.shape) == 1, "Predictions are not a 1-d array!"
     assert len(actual.shape) == 1, "Ground-truth values are not a 1-d array!"
@@ -19,7 +16,7 @@ def NWRMSLE(
     return np.sqrt(np.power(numer, 2).sum() / weights.sum())
 
 
-def MAE(pred: NDArray[np.float32], actual: NDArray[np.NDArray[np.float32]]) -> float:
+def MAE(pred: pd.Series, actual: pd.Series) -> float:
     # ensure input data are 1-d arrays
     assert len(pred.shape) == 1, "Predictions are not a 1-d array!"
     assert len(actual.shape) == 1, "Ground-truth values are not a 1-d array!"
@@ -31,7 +28,7 @@ def MAE(pred: NDArray[np.float32], actual: NDArray[np.NDArray[np.float32]]) -> f
     return np.absolute(pred - actual).sum() / pred.shape[0]
 
 
-def MSE(pred: NDArray[np.float32], actual: NDArray[np.NDArray[np.float32]]) -> float:
+def MSE(pred: pd.Series, actual: pd.Series) -> float:
     # ensure input data are 1-d arrays
     assert len(pred.shape) == 1, "Predictions are not a 1-d array!"
     assert len(actual.shape) == 1, "Ground-truth values are not a 1-d array!"
