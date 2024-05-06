@@ -99,8 +99,8 @@ def get_data(data_dir=f"{os.path.dirname(__file__)}/data") -> None:
     print("Merging test data")
     test = __merge_dataframes(data_frames, "test")
     print("Saving to disk!")
-    train.to_csv(f"{data_dir}/test_merged.csv", index=False)
-    test.to_csv(f"{data_dir}/train_merged.csv", index=False)
+    train.to_csv(f"{data_dir}/train_merged.csv", index=False)
+    test.to_csv(f"{data_dir}/test_merged.csv", index=False)
 
 
 if __name__ == "__main__":
