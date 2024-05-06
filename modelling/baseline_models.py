@@ -34,3 +34,4 @@ def moving_average(
     for i in range(window, data.shape[0]):
         windowed_data = data.iloc[(i - window) : i]
         preds.at[i] = (windowed_data * unit_weights).sum()
+    return preds
