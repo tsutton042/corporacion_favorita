@@ -7,7 +7,7 @@ from typing import Callable
 import numpy as np
 
 
-def simulated_annealing_horizon(
+def simulated_annealing(
     func: Callable[..., pd.Series],
     metric: Callable[[pd.Series, pd.Series], float],
     data: pd.Series,
