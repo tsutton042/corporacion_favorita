@@ -10,9 +10,14 @@ def persistance(data: pd.Series, horizon: int = 1) -> pd.Series:
     """
     Defines a basic persistance model with a defined horizon
     Forms a baseline to compare other models to.
-    Note that the output will be
+    Note that the output will be of length data.shape[0] - horizon
     """
+    assert horizon > 0, "Horizon is not positive!"
+    assert data.shape[0] > horizon, "Horizon is longer than data!"
     preds = pd.Series()
+    for i in range(horizon, data.shape[0]):
+        preds.iat[preds.shape[0]] = data.iat[i]
+    return preds
 
 
 def moving_average(
