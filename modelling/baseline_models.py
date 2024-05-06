@@ -1,5 +1,5 @@
 """
-Defines basline models for comparison purposes
+Defines basline models for comparison purposes. These will not be put into the kaggle compettion page!
 """
 
 import pandas as pd
@@ -10,14 +10,14 @@ def persistance(data: pd.Series, horizon: int = 1) -> pd.Series:
     """
     Defines a basic persistance model with a defined horizon
     Forms a baseline to compare other models to.
-    Note that the output will be of length data.shape[0] - horizon
+    Note that the model cheats for the first horizon predictions!
     """
     assert horizon > 0, "Horizon is not positive!"
     assert data.shape[0] > horizon, "Horizon is longer than data!"
-    preds = pd.Series()
+    preds = list(data.iloc[:horizon])
     for i in range(horizon, data.shape[0]):
-        preds.iat[preds.shape[0]] = data.iat[i]
-    return preds
+        preds.append(data.iat[i - horizon])
+    return pd.Series(preds)
 
 
 def moving_average(
@@ -40,15 +40,16 @@ def moving_average(
     unit_weights = pd.Series(x / sum(weights) for x in weights)
     # do this hack-job to make sure the inputs are as long as the outputs
     if match_lengths:
-        preds = pd.Series(data.iloc[0])
+        preds = [data.iloc[0]]
         for i in range(1, window):
-            preds.iat[i] = (
-                data.iloc[:i] * unit_weights.iloc[:i]
-            ).sum() / unit_weights.iloc[:i].sum()
+            preds.append(
+                (data.iloc[:i] * unit_weights.iloc[:i]).sum()
+                / unit_weights.iloc[:i].sum()
+            )
     else:
-        preds = pd.Series()
+        preds = []
     # now actually run the usual moving average
     for i in range(window, data.shape[0]):
         windowed_data = data.iloc[(i - window) : i]
-        preds.at[i] = (windowed_data * unit_weights).sum()
-    return preds
+        preds.append((windowed_data * unit_weights).sum())
+    return pd.Series(preds)
