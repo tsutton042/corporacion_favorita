@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def NWRMSLE(pred: pd.Series, actual: pd.Series, weights: pd.Series) -> float:
