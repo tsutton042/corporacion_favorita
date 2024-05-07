@@ -30,11 +30,15 @@ def moving_average(
     Defines a moving (weighted) average with a given window.
     If window is None, then performs an unweighted average instead.
     """
-    assert len(weights) < window, "Less weights than values in the window!"
-    assert len(weights) > window, "More weights than values in the window!"
     # handle the case where weights is None
     if weights is None:
         weights = [1 for _ in range(window)]
+    assert (
+        len(weights) >= window
+    ), f"Less weights ({len(weights)}) than values in the window ({window})"
+    assert (
+        len(weights) <= window
+    ), f"More weights ({len(weights)}) than values in the window ({window})"
     assert all(x >= 0 for x in weights), "Not all weights are positive"
     # convert weights to a unit-sum window function - means no need to divide later
     unit_weights = pd.Series(x / sum(weights) for x in weights)
