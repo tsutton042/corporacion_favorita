@@ -1,9 +1,7 @@
 from tensorflow import keras
-import pandas as pd
 from lstm import LSTM
 from pickle import load, dump
-from typing import Callable
-import matplotlib.pyplot as plt
+
 
 # read data
 with open("data/ts_train.pkl", "rb") as f:
@@ -60,7 +58,6 @@ with open("results/history.pkl", "wb") as f:
 # evaluate
 with open("data/ts_test.pkl", "rb") as f:
     test_x, test_y = load(f)
-
 
 output = model.evaluate(
     x=test_x,
