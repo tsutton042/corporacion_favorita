@@ -59,15 +59,8 @@ with open("results/history.pkl", "wb") as f:
 with open("data/ts_test.pkl", "rb") as f:
     test_x, test_y = load(f)
 
-output = model.evaluate(
+model.evaluate(
     x=test_x,
     y=test_y,
     return_dict=True,
 )
-with open("results/output.pkl", "wb") as f:
-    dump(output, f)
-
-
-preds = model.predict(test_x)
-with open("results/ts_test_preds.pkl", "wb") as f:
-    dump(preds, f)
