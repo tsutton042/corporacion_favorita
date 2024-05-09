@@ -42,7 +42,7 @@ print("Making time series structures")
 feature_cols = [
     "dcoilwtico",
     "day_off",
-    "perishable",
+    "produce",
     "type_A",
     "beverage",
     "poultry",
