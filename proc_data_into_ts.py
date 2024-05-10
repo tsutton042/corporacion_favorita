@@ -97,8 +97,8 @@ def structure_ts(tab_data, features, window_size=8):
 
 train_x, train_y = structure_ts(train, feature_cols)
 val_x, val_y = structure_ts(val, feature_cols)
-test_x, test_y = structure_ts(val, feature_cols)
-test_x_ols, test_y_ols = structure_ts(val, features_2)
+test_x, test_y = structure_ts(test, feature_cols)
+test_x_ols, test_y_ols = structure_ts(test, features_2)
 
 print("Saving")
 with open("data/ts_train.pkl", "wb") as f:
