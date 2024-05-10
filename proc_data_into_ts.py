@@ -23,6 +23,8 @@ data["type_A"] = data.type == "A"
 data["beverage"] = data.family == "BEVERAGES"
 data["poultry"] = data.family == "POULTRY"
 data["meats"] = data.family == "MEATS"
+data["prepared_foods"] = data.family == "PREPARED FOODS"
+data["school_office_supplies"] = data.family == "SCHOOL AND OFFICE SUPPLIES"
 # make a train/val split on store/item split
 print("Creating train/val sets")
 store_item_map = pd.unique(pd.Series(zip(data.store_nbr, data.item_nbr)))
@@ -37,6 +39,7 @@ test_store_item = rest_store_item[250:400]
 print("This will take a while")
 train = data[[x in list(train_store_item) for x in zip(data.store_nbr, data.item_nbr)]]
 val = data[[x in list(val_store_item) for x in zip(data.store_nbr, data.item_nbr)]]
+test = data[[x in list(test_store_item) for x in zip(data.store_nbr, data.item_nbr)]]
 # structure as a time series - we form one for each time step of each store/item pair
 print("Making time series structures")
 feature_cols = [
@@ -47,6 +50,19 @@ feature_cols = [
     "beverage",
     "poultry",
     "meats",
+]
+
+features_2 = [
+    "onpromotion",
+    "produce",
+    "type_A",
+    "beverage",
+    "perishable",
+    "poultry",
+    "day_off",
+    "meats",
+    "prepared_foods",
+    "school_office_supplies",
 ]
 
 
@@ -82,6 +98,7 @@ def structure_ts(tab_data, features, window_size=8):
 train_x, train_y = structure_ts(train, feature_cols)
 val_x, val_y = structure_ts(val, feature_cols)
 test_x, test_y = structure_ts(val, feature_cols)
+test_x_ols, test_y_ols = structure_ts(val, features_2)
 
 print("Saving")
 with open("data/ts_train.pkl", "wb") as f:
@@ -92,3 +109,6 @@ with open("data/ts_val.pkl", "wb") as f:
 
 with open("data/ts_test.pkl", "wb") as f:
     dump((test_x, test_y), f)
+
+with open("data/ts_test_ols2.pkl", "wb") as f:
+    dump((test_x_ols, test_y_ols), f)
